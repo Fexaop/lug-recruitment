@@ -35,15 +35,27 @@ export async function updateSession(request: NextRequest) {
     url.pathname = "/auth/login"
     return NextResponse.redirect(url)
   }
-
+  
   // Check if user has panelist role for protected routes
   if (user && request.nextUrl.pathname.startsWith("/dashboard")) {
-    const { data: userData } = await supabase.from("users").select("role").eq("id", user.id).single()
-
+    const { data: userData, error } = await supabase
+      .from("users")
+      .select("role")
+      .eq("id", user.id)
+      .single();
+  
+    console.log("Middleware Debug:", { 
+      userId: user.id, 
+      email: user.email, 
+      role: userData?.role, 
+      error 
+    });
+  
     if (!userData || userData.role !== "panelist") {
-      const url = request.nextUrl.clone()
-      url.pathname = "/auth/unauthorized"
-      return NextResponse.redirect(url)
+      console.log("Access Denied - Redirecting to unauthorized");
+      const url = request.nextUrl.clone();
+      url.pathname = "/auth/unauthorized";
+      return NextResponse.redirect(url);
     }
   }
 
