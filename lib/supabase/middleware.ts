@@ -24,7 +24,18 @@ export async function updateSession(request: NextRequest) {
       },
     },
   )
+  const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
+  const key = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
 
+  console.log("=== Supabase Client Debug ===");
+  console.log("URL:", url ? "✅ Present" : "❌ MISSING");
+  console.log("ANON_KEY length:", key ? key.length : 0);
+  console.log("Full URL:", url);
+
+  if (!url || !key) {
+    console.error("❌ Supabase env vars are missing!");
+  }
+  
   const {
     data: { user },
   } = await supabase.auth.getUser()
