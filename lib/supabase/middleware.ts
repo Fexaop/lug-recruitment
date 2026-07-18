@@ -24,6 +24,9 @@ export async function updateSession(request: NextRequest) {
       },
     },
   )
+  const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
+  const key = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
+
   console.log("=== Supabase Client Debug ===");
   console.log("URL:", url ? "✅ Present" : "❌ MISSING");
   console.log("ANON_KEY length:", key ? key.length : 0);
